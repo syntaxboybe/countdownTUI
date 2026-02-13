@@ -422,24 +422,37 @@
         const countdownId = urlParams.get('id');
         const encodedData = urlParams.get('data');
 
+        // Debug: Log what we got
+        console.log('=== DEBUG ===');
+        console.log('Full URL:', window.location.href);
+        console.log('Search:', window.location.search);
+        console.log('countdownId:', countdownId);
+        console.log('encodedData:', encodedData);
+
         let countdownInterval;
         let countdownData;
 
         if (encodedData) {
+            console.log('Trying to parse encoded data...');
             // New format: data in URL (works across devices)
             try {
                 // Simple decode - just reverse the encoding
+                console.log('Decoding:', encodedData);
                 const decodedJson = decodeURIComponent(encodedData);
+                console.log('Decoded JSON:', decodedJson);
                 countdownData = JSON.parse(decodedJson);
+                console.log('countdownData:', countdownData);
                 loadCountdownFromData();
             } catch (e) {
-                console.error('Error parsing countdown data:', e, encodedData);
+                console.error('Error parsing countdown data:', e);
                 showNotFound();
             }
         } else if (countdownId) {
+            console.log('Using localStorage mode with ID:', countdownId);
             // Old format: ID only (requires localStorage - won't work across devices)
             loadCountdownFromLocalStorage();
         } else {
+            console.log('No data or ID found - showing not found');
             showNotFound();
         }
 
@@ -604,13 +617,20 @@
         }
 
         function showNotFound() {
-            document.getElementById('countdownContent').innerHTML = `
-                <div class="not-found">
-                    <h2>404</h2>
-                    <p>This countdown doesn't exist or has been deleted.</p>
-                    <button onclick="createYourOwn()" class="terminal-btn-action">Create Your Own Countdown</button>
+            // Show debug info for troubleshooting
+            const currentUrl = window.location.href;
+            const currentEncodedData = urlParams.get('data');
+            const debugInfo = `
+                <div style="text-align: center; padding: 20px;">
+                    <h2 style="color: #ff5f56;">Unable to Load Countdown</h2>
+                    <p style="color: #888; margin: 20px 0;">
+                        URL: ${currentUrl}<br>
+                        Data param: ${currentEncodedData || 'none'}
+                    </p>
+                    <button onclick="window.location.href='/'" class="terminal-btn-action">Go to Home</button>
                 </div>
             `;
+            document.getElementById('countdownContent').innerHTML = debugInfo;
         }
 
         function createYourOwn() {
