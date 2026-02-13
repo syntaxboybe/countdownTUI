@@ -441,7 +441,7 @@
         }
 
         function shareCountdown() {
-            const url = `${window.location.origin}${window.location.pathname.replace('my-countdown.html', '')}shared-countdown.html?id=${countdownId}`;
+            const url = `${window.location.origin}/shared-countdown?id=${countdownId}`;
             
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(url).then(() => {
@@ -453,11 +453,11 @@
         }
 
         function goToDashboard() {
-            window.location.href = 'app-dashboard.html';
+            window.location.href = '/dashboard';
         }
 
         function goToHome() {
-            window.location.href = 'login.html';
+            window.location.href = '/';
         }
     </script>
 </body>

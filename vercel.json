@@ -1,0 +1,12 @@
+{
+  "routes": [
+    { "src": "/login", "dest": "/login.html" },
+    { "src": "/dashboard", "dest": "/app-dashboard.html" },
+    { "src": "/app-dashboard", "dest": "/app-dashboard.html" },
+    { "src": "/my-countdown", "dest": "/my-countdown.html" },
+    { "src": "/shared-countdown", "dest": "/shared-countdown.html" },
+    { "src": "/", "dest": "/login.html" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}

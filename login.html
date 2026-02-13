@@ -292,14 +292,14 @@
         // Check if already logged in
         const currentUser = sessionStorage.getItem('currentUser');
         if (currentUser) {
-            window.location.href = 'app-dashboard.html';
+            window.location.href = '/dashboard';
         }
 
         // Check for shared countdown
         const urlParams = new URLSearchParams(window.location.search);
         const shareId = urlParams.get('view');
         if (shareId) {
-            window.location.href = 'shared-countdown.html?id=' + shareId;
+            window.location.href = '/shared-countdown?id=' + shareId;
         }
 
         // Theme functions
@@ -364,7 +364,7 @@
             }
 
             sessionStorage.setItem('currentUser', username);
-            window.location.href = 'app-dashboard.html';
+            window.location.href = '/dashboard';
         }
 
         function handleRegister() {
