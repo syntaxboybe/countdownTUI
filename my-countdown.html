@@ -551,18 +551,19 @@
             <div class="terminal-btn green"></div>
             <span class="terminal-title">countdown_view.sh</span>
             <select id="themeSelect" onchange="changeTheme(this.value)" style="background: var(--terminal-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 5px 10px; font-family: inherit; font-size: 12px; cursor: pointer; margin-left: auto;">
-                <option value="default">Classic Green</option>
                 <option value="latte">Catppuccin Latte</option>
                 <option value="frappe">Catppuccin Frappé</option>
                 <option value="macchiato">Catppuccin Macchiato</option>
                 <option value="mocha">Catppuccin Mocha</option>
             </select>
-            <span class="color-btn" onclick="changeColor('#00ff00')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #00ff00; cursor: pointer; margin-left: 8px; border: 2px solid transparent;" title="Green"></span>
-            <span class="color-btn" onclick="changeColor('#ff5f56')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ff5f56; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Red"></span>
-            <span class="color-btn" onclick="changeColor('#ffb000')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ffb000; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Amber"></span>
-            <span class="color-btn" onclick="changeColor('#00aaff')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #00aaff; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Blue"></span>
-            <span class="color-btn" onclick="changeColor('#ff69b4')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ff69b4; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Pink"></span>
-            <span class="color-btn" onclick="changeColor('#ffffff')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="White"></span>
+            <span class="color-btn" onclick="changeColor('#8839ef')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #8839ef; cursor: pointer; margin-left: 8px; border: 2px solid transparent;" title="Latte Mauve"></span>
+            <span class="color-btn" onclick="changeColor('#ca9ee6')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ca9ee6; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Frappé Mauve"></span>
+            <span class="color-btn" onclick="changeColor('#c6a0f6')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #c6a0f6; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Macchiato Mauve"></span>
+            <span class="color-btn" onclick="changeColor('#cba6f7')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #cba6f7; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Mocha Mauve"></span>
+            <span class="color-btn" onclick="changeColor('#fab387')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #fab387; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Peach"></span>
+            <span class="color-btn" onclick="changeColor('#f9e2af')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #f9e2af; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Yellow"></span>
+            <span class="color-btn" onclick="changeColor('#89b4fa')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #89b4fa; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Blue"></span>
+            <span class="color-btn" onclick="changeColor('#f5c2e7')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #f5c2e7; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Pink"></span>
         </div>
         <div class="terminal-body">
             <div id="countdownContent">
@@ -646,7 +647,7 @@
         }
 
         function loadTheme() {
-            const savedTheme = localStorage.getItem('terminalTheme') || 'default';
+            const savedTheme = localStorage.getItem('terminalTheme') || 'latte';
             const savedColor = localStorage.getItem('accentColor') || null;
             const themeSelect = document.getElementById('themeSelect');
             if (themeSelect) {
