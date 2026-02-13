@@ -4,7 +4,6 @@
     { "source": "/dashboard", "destination": "/app-dashboard.html" },
     { "source": "/my-countdown", "destination": "/my-countdown.html" },
     { "source": "/shared-countdown", "destination": "/shared-countdown.html" },
-    { "source": "/shared-countdown(.*)", "destination": "/shared-countdown.html" },
-    { "source": "/", "destination": "/login.html" }
+    { "source": "/(.*)", "destination": "/login.html" }
   ]
 }

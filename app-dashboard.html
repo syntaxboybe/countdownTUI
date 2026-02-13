@@ -998,9 +998,9 @@
                 targetTime: countdown.targetTime,
                 owner: countdown.owner
             };
-            // Simple encoding - just encode the JSON string
+            // Simple encoding
             const encodedData = encodeURIComponent(JSON.stringify(shareData));
-            const url = `${window.location.origin}/shared-countdown?data=${encodedData}`;
+            const url = window.location.origin + '/shared-countdown?data=' + encodedData;
             document.getElementById('shareUrl').value = url;
             document.getElementById('shareModal').classList.add('active');
         }
