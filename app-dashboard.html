@@ -565,6 +565,104 @@
             font-size: 48px;
             margin-bottom: 15px;
         }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .edit-modal.active {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background-color: var(--terminal-bg);
+            border: 2px solid var(--border-color);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .edit-modal-title {
+            font-size: 20px;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .edit-modal-description {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .edit-modal-input {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .edit-modal-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--shadow-color);
+        }
+
+        .edit-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .edit-modal-btn {
+            padding: 10px 25px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.3s;
+        }
+
+        .edit-modal-btn.cancel {
+            background-color: transparent;
+            border-color: #666;
+            color: #888;
+        }
+
+        .edit-modal-btn.cancel:hover {
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .edit-modal-btn.save {
+            background-color: transparent;
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .edit-modal-btn.save:hover {
+            background-color: var(--text-color);
+            color: var(--body-bg);
+        }
+
+        .edit-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -662,6 +760,19 @@
             <div class="delete-modal-buttons">
                 <button onclick="closeDeleteModal()" class="delete-modal-btn cancel">CANCEL</button>
                 <button onclick="confirmDelete()" class="delete-modal-btn confirm">DELETE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-icon">✏️</div>
+            <h3 class="edit-modal-title">Edit Countdown</h3>
+            <p class="edit-modal-description">Update the title for this countdown:</p>
+            <input type="text" id="editTitleInput" class="edit-modal-input" placeholder="Countdown title">
+            <div class="edit-modal-buttons">
+                <button onclick="closeEditModal()" class="edit-modal-btn cancel">CANCEL</button>
+                <button onclick="saveEdit()" class="edit-modal-btn save">SAVE</button>
             </div>
         </div>
     </div>
@@ -826,6 +937,7 @@
                         </div>
                         <div class="countdown-actions">
                             <button onclick="viewCountdown('${cd.id}')" class="action-btn">VIEW</button>
+                            <button onclick="editCountdown('${cd.id}')" class="action-btn">EDIT</button>
                             <button onclick="shareCountdown('${cd.id}')" class="action-btn">SHARE</button>
                             <button onclick="deleteCountdown('${cd.id}')" class="action-btn delete">DELETE</button>
                         </div>
@@ -929,6 +1041,39 @@
             loadCountdowns();
         }
 
+        let countdownToEdit = null;
+
+        function editCountdown(id) {
+            const countdowns = JSON.parse(localStorage.getItem('countdowns'));
+            const countdown = countdowns[id];
+            if (countdown) {
+                countdownToEdit = id;
+                document.getElementById('editTitleInput').value = countdown.title;
+                document.getElementById('editModal').classList.add('active');
+                document.getElementById('editTitleInput').focus();
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            countdownToEdit = null;
+        }
+
+        function saveEdit() {
+            if (!countdownToEdit) return;
+            
+            const newTitle = document.getElementById('editTitleInput').value.trim();
+            if (newTitle) {
+                const countdowns = JSON.parse(localStorage.getItem('countdowns'));
+                if (countdowns[countdownToEdit]) {
+                    countdowns[countdownToEdit].title = newTitle;
+                    localStorage.setItem('countdowns', JSON.stringify(countdowns));
+                }
+            }
+            closeEditModal();
+            loadCountdowns();
+        }
+
         // Close delete modal when clicking outside
         document.getElementById('deleteModal').addEventListener('click', function(e) {
             if (e.target === this) {
@@ -943,11 +1088,26 @@
             }
         });
 
+        // Close edit modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+
+        // Allow Enter key to save in edit modal
+        document.getElementById('editTitleInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                saveEdit();
+            }
+        });
+
         // Close modals on Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeDeleteModal();
                 closeShareModal();
+                closeEditModal();
             }
         });
 
