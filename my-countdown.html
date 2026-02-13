@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Countdown - View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --terminal-bg: #1a1a1a;
+            --body-bg: #0c0c0c;
+            --text-color: #00ff00;
+            --header-bg: #2d2d2d;
+            --border-color: #00ff00;
+            --shadow-color: rgba(0, 255, 0, 0.3);
+        }
+
+        /* Catppuccin Latte (Light) */
+        body.theme-latte {
+            --terminal-bg: #eff1f5;
+            --body-bg: #e6e9ef;
+            --text-color: #8839ef;
+            --header-bg: #dce0e8;
+            --border-color: #8839ef;
+            --shadow-color: rgba(136, 57, 239, 0.3);
+        }
+
+        /* Catppuccin Frappé */
+        body.theme-frappe {
+            --terminal-bg: #303446;
+            --body-bg: #292c3c;
+            --text-color: #ca9ee6;
+            --header-bg: #232634;
+            --border-color: #ca9ee6;
+            --shadow-color: rgba(202, 158, 230, 0.3);
+        }
+
+        /* Catppuccin Macchiato */
+        body.theme-macchiato {
+            --terminal-bg: #24273a;
+            --body-bg: #1e2030;
+            --text-color: #c6a0f6;
+            --header-bg: #181926;
+            --border-color: #c6a0f6;
+            --shadow-color: rgba(198, 160, 246, 0.3);
+        }
+
+        /* Catppuccin Mocha */
+        body.theme-mocha {
+            --terminal-bg: #1e1e2e;
+            --body-bg: #181825;
+            --text-color: #cba6f7;
+            --header-bg: #11111b;
+            --border-color: #cba6f7;
+            --shadow-color: rgba(203, 166, 247, 0.3);
+        }
+
+        body {
+            background-color: var(--body-bg);
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .terminal {
+            width: 90%;
+            max-width: 800px;
+            background-color: var(--terminal-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--shadow-color);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background-color: var(--header-bg);
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-btn.red { background-color: #ff5f56; }
+        .terminal-btn.yellow { background-color: #ffbd2e; }
+        .terminal-btn.green { background-color: #27c93f; }
+
+        .terminal-title {
+            margin-left: 10px;
+            color: #888;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #666;
+            color: #888;
+            padding: 5px 15px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .back-btn:hover {
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .terminal-body {
+            padding: 40px;
+        }
+
+        .countdown-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .countdown-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--shadow-color);
+        }
+
+        .countdown-owner {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .countdown-display {
+            text-align: center;
+            padding: 40px;
+            border: 2px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .time-units {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            text-align: center;
+        }
+
+        .time-value {
+            font-size: 64px;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 0 20px var(--shadow-color);
+            min-width: 100px;
+        }
+
+        .time-label {
+            font-size: 16px;
+            color: #888;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        .colon {
+            font-size: 64px;
+            color: var(--text-color);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .message {
+            margin-top: 30px;
+            font-size: 24px;
+            color: var(--text-color);
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .countdown-info {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .terminal-btn-action {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 30px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .terminal-btn-action:hover {
+            background-color: var(--text-color);
+            color: var(--body-bg);
+        }
+
+        .terminal-btn-action.secondary {
+            border-color: #666;
+            color: #888;
+        }
+
+        .terminal-btn-action.secondary:hover {
+            border-color: var(--border-color);
+            color: var(--text-color);
+            background-color: transparent;
+        }
+
+        .not-found {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .not-found h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .not-found p {
+            color: #888;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-btn red"></div>
+            <div class="terminal-btn yellow"></div>
+            <div class="terminal-btn green"></div>
+            <span class="terminal-title">countdown_view.sh</span>
+            <select id="themeSelect" onchange="changeTheme(this.value)" style="background: var(--terminal-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 5px 10px; font-family: inherit; font-size: 12px; cursor: pointer; margin-left: auto;">
+                <option value="default">Classic Green</option>
+                <option value="latte">Catppuccin Latte</option>
+                <option value="frappe">Catppuccin Frappé</option>
+                <option value="macchiato">Catppuccin Macchiato</option>
+                <option value="mocha">Catppuccin Mocha</option>
+            </select>
+        </div>
+        <div class="terminal-body">
+            <div id="countdownContent">
+                <!-- Content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme functions
+        function changeTheme(theme) {
+            document.body.className = '';
+            if (theme !== 'default') {
+                document.body.classList.add('theme-' + theme);
+            }
+            localStorage.setItem('terminalTheme', theme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('terminalTheme') || 'default';
+            const themeSelect = document.getElementById('themeSelect');
+            if (themeSelect) {
+                themeSelect.value = savedTheme;
+            }
+            changeTheme(savedTheme);
+        }
+
+        // Load theme on startup
+        loadTheme();
+
+        // Philippine Standard Time (PST) helper functions
+        const PST_OFFSET = 8; // UTC+8
+
+        function getPSTDate() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            return new Date(utc + (3600000 * PST_OFFSET));
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const countdownId = urlParams.get('id');
+        const currentUser = sessionStorage.getItem('currentUser');
+
+        let countdownInterval;
+        let countdownData;
+
+        if (!countdownId) {
+            showNotFound();
+        } else {
+            loadCountdown();
+        }
+
+        function loadCountdown() {
+            const countdowns = JSON.parse(localStorage.getItem('countdowns'));
+            countdownData = countdowns[countdownId];
+
+            if (!countdownData) {
+                showNotFound();
+                return;
+            }
+
+            const isOwner = currentUser === countdownData.owner;
+            // Parse as PST (UTC+8)
+            const targetDate = new Date(countdownData.targetDate + 'T' + countdownData.targetTime + '+08:00');
+            
+            const content = document.getElementById('countdownContent');
+            content.innerHTML = `
+                <div class="countdown-header">
+                    <h1 class="countdown-title">${escapeHtml(countdownData.title)}</h1>
+                    <p class="countdown-owner">Created by: ${countdownData.owner}</p>
+                </div>
+
+                <div class="countdown-info">
+                    Target Date (PST): ${countdownData.targetDate} at ${countdownData.targetTime} UTC+8
+                </div>
+
+                <div class="countdown-display" id="countdownDisplay">
+                    <div class="time-units">
+                        <div class="time-unit">
+                            <div class="time-value" id="days">00</div>
+                            <div class="time-label">Days</div>
+                        </div>
+                        <div class="colon">:</div>
+                        <div class="time-unit">
+                            <div class="time-value" id="hours">00</div>
+                            <div class="time-label">Hours</div>
+                        </div>
+                        <div class="colon">:</div>
+                        <div class="time-unit">
+                            <div class="time-value" id="minutes">00</div>
+                            <div class="time-label">Minutes</div>
+                        </div>
+                        <div class="colon">:</div>
+                        <div class="time-unit">
+                            <div class="time-value" id="seconds">00</div>
+                            <div class="time-label">Seconds</div>
+                        </div>
+                    </div>
+                    <div class="message" id="message"></div>
+                </div>
+
+                <div class="action-buttons">
+                    ${isOwner ? `
+                        <button onclick="editCountdown()" class="terminal-btn-action">EDIT</button>
+                        <button onclick="shareCountdown()" class="terminal-btn-action">SHARE</button>
+                        <button onclick="goToDashboard()" class="terminal-btn-action secondary">BACK TO DASHBOARD</button>
+                    ` : `
+                        <button onclick="shareCountdown()" class="terminal-btn-action">SHARE</button>
+                        <button onclick="goToHome()" class="terminal-btn-action secondary">CREATE YOUR OWN</button>
+                    `}
+                </div>
+            `;
+
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function updateCountdown() {
+            // Parse as PST (UTC+8)
+            const targetDate = new Date(countdownData.targetDate + 'T' + countdownData.targetTime + '+08:00');
+            const nowPST = getPSTDate();
+            const difference = targetDate - nowPST;
+
+            if (difference <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                document.getElementById('message').textContent = 'COUNTDOWN COMPLETE!';
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showNotFound() {
+            document.getElementById('countdownContent').innerHTML = `
+                <div class="not-found">
+                    <h2>404</h2>
+                    <p>Countdown not found</p>
+                    <button onclick="goToHome()" class="terminal-btn-action">GO HOME</button>
+                </div>
+            `;
+        }
+
+        function editCountdown() {
+            // Simple edit - you can expand this
+            const newTitle = prompt('Enter new title:', countdownData.title);
+            if (newTitle && newTitle.trim()) {
+                countdownData.title = newTitle.trim();
+                const countdowns = JSON.parse(localStorage.getItem('countdowns'));
+                countdowns[countdownId] = countdownData;
+                localStorage.setItem('countdowns', JSON.stringify(countdowns));
+                loadCountdown();
+            }
+        }
+
+        function shareCountdown() {
+            const url = `${window.location.origin}${window.location.pathname.replace('my-countdown.html', '')}shared-countdown.html?id=${countdownId}`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Share URL copied to clipboard!');
+                });
+            } else {
+                prompt('Copy this URL to share:', url);
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = 'app-dashboard.html';
+        }
+
+        function goToHome() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
