@@ -252,6 +252,197 @@
             color: #888;
             margin-bottom: 30px;
         }
+
+        .delete-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .delete-modal.active {
+            display: flex;
+        }
+
+        .delete-modal-content {
+            background-color: var(--terminal-bg);
+            border: 2px solid #ff5f56;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .delete-modal-title {
+            font-size: 20px;
+            color: #ff5f56;
+            margin-bottom: 15px;
+        }
+
+        .delete-modal-message {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .delete-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .delete-modal-btn {
+            padding: 10px 25px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.3s;
+        }
+
+        .delete-modal-btn.cancel {
+            background-color: transparent;
+            border-color: #666;
+            color: #888;
+        }
+
+        .delete-modal-btn.cancel:hover {
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .delete-modal-btn.confirm {
+            background-color: transparent;
+            border-color: #ff5f56;
+            color: #ff5f56;
+        }
+
+        .delete-modal-btn.confirm:hover {
+            background-color: #ff5f56;
+            color: #0c0c0c;
+        }
+
+        .delete-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .share-modal.active {
+            display: flex;
+        }
+
+        .share-modal-content {
+            background-color: var(--terminal-bg);
+            border: 2px solid var(--border-color);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .share-modal-title {
+            font-size: 20px;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .share-modal-description {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .share-url-input {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid #444;
+            padding: 12px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .share-url-input:focus {
+            outline: none;
+            border-color: var(--border-color);
+        }
+
+        .share-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .share-modal-btn {
+            padding: 10px 25px;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid;
+            transition: all 0.3s;
+        }
+
+        .share-modal-btn.copy {
+            background-color: transparent;
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .share-modal-btn.copy:hover {
+            background-color: var(--text-color);
+            color: var(--body-bg);
+        }
+
+        .share-modal-btn.close {
+            background-color: transparent;
+            border-color: #666;
+            color: #888;
+        }
+
+        .share-modal-btn.close:hover {
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .share-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .copied-text {
+            color: #27c93f;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .copied-text.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -273,6 +464,37 @@
             <div id="countdownContent">
                 <!-- Content loaded dynamically -->
             </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="delete-modal">
+        <div class="delete-modal-content">
+            <div class="delete-icon">⚠️</div>
+            <h3 class="delete-modal-title">Delete Countdown</h3>
+            <p class="delete-modal-message">
+                Are you sure you want to delete "<span id="deleteCountdownName"></span>"?<br>
+                This action cannot be undone.
+            </p>
+            <div class="delete-modal-buttons">
+                <button onclick="closeDeleteModal()" class="delete-modal-btn cancel">CANCEL</button>
+                <button onclick="confirmDelete()" class="delete-modal-btn confirm">DELETE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="shareModal" class="share-modal">
+        <div class="share-modal-content">
+            <div class="share-icon">🔗</div>
+            <h3 class="share-modal-title">Share Countdown</h3>
+            <p class="share-modal-description">
+                Share this countdown with others by copying the link below:
+            </p>
+            <input type="text" id="shareUrlInput" class="share-url-input" readonly>
+            <div class="share-modal-buttons">
+                <button onclick="copyShareLink()" class="share-modal-btn copy">COPY LINK</button>
+                <button onclick="closeShareModal()" class="share-modal-btn close">CLOSE</button>
+            </div>
+            <p id="copiedText" class="copied-text">✓ Link copied to clipboard!</p>
         </div>
     </div>
 
@@ -373,6 +595,7 @@
                     ${isOwner ? `
                         <button onclick="editCountdown()" class="terminal-btn-action">EDIT</button>
                         <button onclick="shareCountdown()" class="terminal-btn-action">SHARE</button>
+                        <button onclick="deleteCountdown()" class="terminal-btn-action" style="border-color: #ff5f56; color: #ff5f56;">DELETE</button>
                         <button onclick="goToDashboard()" class="terminal-btn-action secondary">BACK TO DASHBOARD</button>
                     ` : `
                         <button onclick="shareCountdown()" class="terminal-btn-action">SHARE</button>
@@ -442,14 +665,20 @@
 
         function shareCountdown() {
             const url = `${window.location.origin}/shared-countdown?id=${countdownId}`;
-            
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => {
-                    alert('Share URL copied to clipboard!');
-                });
-            } else {
-                prompt('Copy this URL to share:', url);
-            }
+            document.getElementById('shareUrlInput').value = url;
+            document.getElementById('copiedText').classList.remove('show');
+            document.getElementById('shareModal').classList.add('active');
+        }
+
+        function copyShareLink() {
+            const urlInput = document.getElementById('shareUrlInput');
+            urlInput.select();
+            document.execCommand('copy');
+            document.getElementById('copiedText').classList.add('show');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.remove('active');
         }
 
         function goToDashboard() {
@@ -459,6 +688,59 @@
         function goToHome() {
             window.location.href = '/';
         }
+
+        function deleteCountdown() {
+            document.getElementById('deleteCountdownName').textContent = countdownData.title;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
+        function confirmDelete() {
+            const countdowns = JSON.parse(localStorage.getItem('countdowns'));
+            delete countdowns[countdownId];
+            localStorage.setItem('countdowns', JSON.stringify(countdowns));
+            closeDeleteModal();
+            
+            // Show success message
+            const content = document.getElementById('countdownContent');
+            content.innerHTML = `
+                <div class="not-found">
+                    <h2 style="color: #27c93f;">✓ Deleted</h2>
+                    <p>Countdown has been deleted successfully.</p>
+                    <button onclick="goToDashboard()" class="terminal-btn-action">BACK TO DASHBOARD</button>
+                </div>
+            `;
+            
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1500);
+        }
+
+        // Close delete modal when clicking outside
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Close share modal when clicking outside
+        document.getElementById('shareModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeShareModal();
+            }
+        });
+
+        // Close modals on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDeleteModal();
+                closeShareModal();
+            }
+        });
     </script>
 </body>
 </html>
