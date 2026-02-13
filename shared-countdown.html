@@ -420,17 +420,37 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const countdownId = urlParams.get('id');
+        const encodedData = urlParams.get('data');
 
         let countdownInterval;
         let countdownData;
 
-        if (!countdownId) {
-            showNotFound();
+        if (encodedData) {
+            // New format: data encoded in URL (works across devices)
+            try {
+                countdownData = JSON.parse(atob(encodedData));
+                loadCountdownFromData();
+            } catch (e) {
+                showNotFound();
+            }
+        } else if (countdownId) {
+            // Old format: ID only (requires localStorage - won't work across devices)
+            loadCountdownFromLocalStorage();
         } else {
-            loadCountdown();
+            showNotFound();
         }
 
-        function loadCountdown() {
+        function loadCountdownFromData() {
+            if (!countdownData) {
+                showNotFound();
+                return;
+            }
+
+            // Continue with normal loading using countdownData
+            loadCountdownContent();
+        }
+
+        function loadCountdownFromLocalStorage() {
             const countdowns = JSON.parse(localStorage.getItem('countdowns'));
             countdownData = countdowns[countdownId];
 
@@ -438,6 +458,11 @@
                 showNotFound();
                 return;
             }
+
+            loadCountdownContent();
+        }
+
+        function loadCountdownContent() {
 
             // Parse as PST (UTC+8)
             const targetDate = new Date(countdownData.targetDate + 'T' + countdownData.targetTime + '+08:00');
@@ -523,8 +548,15 @@
                 countdownInterval = setInterval(updateCountdown, 1000);
             }
 
-            // Set share URL
-            const shareUrl = window.location.href;
+            // Set share URL - generate encoded version for sharing
+            const shareData = {
+                title: countdownData.title,
+                targetDate: countdownData.targetDate,
+                targetTime: countdownData.targetTime,
+                owner: countdownData.owner
+            };
+            const newEncodedData = btoa(JSON.stringify(shareData));
+            const shareUrl = `${window.location.origin}/shared-countdown?data=${newEncodedData}`;
             document.getElementById('shareUrl').value = shareUrl;
         }
 
@@ -537,7 +569,11 @@
             if (difference <= 0) {
                 clearInterval(countdownInterval);
                 // Reload to show complete state
-                loadCountdown();
+                if (encodedData) {
+                    loadCountdownFromData();
+                } else {
+                    loadCountdownFromLocalStorage();
+                }
                 return;
             }
 

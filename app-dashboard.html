@@ -989,7 +989,17 @@
         }
 
         function shareCountdown(id) {
-            const url = `${window.location.origin}/shared-countdown?id=${id}`;
+            // Get countdown data and encode in URL for sharing across devices
+            const countdowns = JSON.parse(localStorage.getItem('countdowns'));
+            const countdown = countdowns[id];
+            const shareData = {
+                title: countdown.title,
+                targetDate: countdown.targetDate,
+                targetTime: countdown.targetTime,
+                owner: countdown.owner
+            };
+            const encodedData = btoa(JSON.stringify(shareData));
+            const url = `${window.location.origin}/shared-countdown?data=${encodedData}`;
             document.getElementById('shareUrl').value = url;
             document.getElementById('shareModal').classList.add('active');
         }

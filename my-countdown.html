@@ -787,7 +787,15 @@
         }
 
         function shareCountdown() {
-            const url = `${window.location.origin}/shared-countdown?id=${countdownId}`;
+            // Encode countdown data in URL for sharing across devices
+            const shareData = {
+                title: countdownData.title,
+                targetDate: countdownData.targetDate,
+                targetTime: countdownData.targetTime,
+                owner: countdownData.owner
+            };
+            const encodedData = btoa(JSON.stringify(shareData));
+            const url = `${window.location.origin}/shared-countdown?data=${encodedData}`;
             document.getElementById('shareUrlInput').value = url;
             document.getElementById('copiedText').classList.remove('show');
             document.getElementById('shareModal').classList.add('active');
