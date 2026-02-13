@@ -214,6 +214,144 @@
         .success-message.show {
             display: block;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+
+            .terminal {
+                width: 100%;
+                max-width: 100%;
+                border-radius: 8px;
+            }
+
+            .terminal-header {
+                padding: 10px;
+            }
+
+            .terminal-title {
+                font-size: 12px;
+            }
+
+            .terminal-body {
+                padding: 25px 20px;
+            }
+
+            .logo {
+                margin-bottom: 20px;
+            }
+
+            .logo h1 {
+                font-size: 20px;
+            }
+
+            .logo p {
+                font-size: 12px;
+            }
+
+            .theme-selector {
+                margin-bottom: 15px !important;
+            }
+
+            .theme-selector > div {
+                margin-bottom: 8px;
+            }
+
+            .theme-selector span {
+                font-size: 11px !important;
+            }
+
+            #themeSelect {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .color-btn {
+                width: 16px !important;
+                height: 16px !important;
+                margin: 0 2px !important;
+            }
+
+            .form-container {
+                padding: 0;
+            }
+
+            .input-line {
+                margin-bottom: 15px;
+            }
+
+            .input-line label {
+                font-size: 12px;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            .terminal-input {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+
+            .input-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .terminal-btn-action {
+                width: 100%;
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .toggle-btn {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .error-message {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .success-message {
+                font-size: 12px;
+            }
+
+            .input-prefix {
+                display: none;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .footer-links a {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .terminal-body {
+                padding: 20px 15px;
+            }
+
+            .logo h1 {
+                font-size: 18px;
+            }
+
+            .terminal-btn {
+                display: none;
+            }
+
+            .color-btn {
+                width: 14px !important;
+                height: 14px !important;
+            }
+        }
     </style>
 </head>
 <body>

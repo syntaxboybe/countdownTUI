@@ -96,13 +96,132 @@
         .share-url { background-color: rgba(0, 0, 0, 0.2); border: 1px solid #444; padding: 12px 15px; color: var(--text-color); font-family: inherit; font-size: 14px; width: 100%; max-width: 500px; word-break: break-all; margin-bottom: 10px; }
         .copy-btn { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 10px 25px; font-family: inherit; font-size: 14px; cursor: pointer; transition: all 0.3s; }
         .copy-btn:hover { background-color: var(--text-color); color: var(--body-bg); }
-        @media (max-width: 600px) {
-            .terminal { width: 100%; max-width: 100%; border-radius: 0; }
-            .terminal-body { padding: 20px 10px; }
-            .countdown-display { padding: 15px 10px; border-left: none; border-right: none; }
-            .countdown-title { font-size: 20px; }
-            .time-value, .colon { font-size: 16px; }
-            .time-label { font-size: 6px; }
+        @media (max-width: 768px) {
+            .terminal {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .terminal-header {
+                flex-wrap: wrap;
+                padding: 10px;
+                gap: 5px;
+            }
+
+            .terminal-title {
+                order: 1;
+                flex-basis: 100%;
+                margin: 5px 0;
+                font-size: 12px;
+                text-align: center;
+            }
+
+            .terminal-btn {
+                order: 2;
+            }
+
+            #themeSelect {
+                order: 3;
+                font-size: 10px;
+                padding: 4px 6px;
+                margin-left: 0 !important;
+            }
+
+            .color-btn {
+                width: 14px !important;
+                height: 14px !important;
+                margin-left: 2px !important;
+            }
+
+            .terminal-body {
+                padding: 15px;
+            }
+
+            .countdown-display {
+                padding: 20px 10px;
+                border-left: none;
+                border-right: none;
+            }
+
+            .countdown-title {
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .countdown-meta {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .time-display {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .time-unit {
+                font-size: 20px;
+            }
+
+            .time-unit span {
+                font-size: 11px;
+            }
+
+            .not-found {
+                padding: 40px 15px;
+            }
+
+            .not-found h2 {
+                font-size: 18px;
+            }
+
+            .not-found p {
+                font-size: 13px;
+            }
+
+            .share-info {
+                padding: 15px;
+            }
+
+            .share-info h3 {
+                font-size: 16px;
+            }
+
+            .share-info p {
+                font-size: 12px;
+            }
+
+            .share-url {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+
+            .copy-btn {
+                width: 100%;
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .terminal-btn {
+                display: none;
+            }
+
+            .color-btn {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            .time-unit {
+                font-size: 16px;
+            }
+
+            .countdown-title {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
