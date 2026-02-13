@@ -492,9 +492,9 @@
 
                     <div class="share-info">
                         <p>Share this countdown:</p>
-                        <input type="text" id="shareUrl" class="share-url" readonly>
+                        <input type="text" id="shareUrlComplete" class="share-url" readonly>
                         <br>
-                        <button onclick="copyShareUrl()" class="copy-btn">COPY LINK</button>
+                        <button onclick="copyShareUrl('complete')" class="copy-btn">COPY LINK</button>
                     </div>
                 `;
             } else {
@@ -538,9 +538,9 @@
 
                     <div class="share-info">
                         <p>Share this countdown:</p>
-                        <input type="text" id="shareUrl" class="share-url" readonly>
+                        <input type="text" id="shareUrlActive" class="share-url" readonly>
                         <br>
-                        <button onclick="copyShareUrl()" class="copy-btn">COPY LINK</button>
+                        <button onclick="copyShareUrl('active')" class="copy-btn">COPY LINK</button>
                     </div>
                 `;
 
@@ -557,7 +557,12 @@
             };
             const newEncodedData = btoa(JSON.stringify(shareData));
             const shareUrl = `${window.location.origin}/shared-countdown?data=${newEncodedData}`;
-            document.getElementById('shareUrl').value = shareUrl;
+            
+            // Set URL in both share inputs
+            const shareUrlComplete = document.getElementById('shareUrlComplete');
+            const shareUrlActive = document.getElementById('shareUrlActive');
+            if (shareUrlComplete) shareUrlComplete.value = shareUrl;
+            if (shareUrlActive) shareUrlActive.value = shareUrl;
         }
 
         function updateCountdown() {
@@ -608,25 +613,38 @@
             window.location.href = '/';
         }
 
-        function copyShareUrl() {
-            const urlInput = document.getElementById('shareUrl');
+        function copyShareUrl(type) {
+            // Get the URL from either input based on type
+            let urlInput;
+            if (type === 'complete') {
+                urlInput = document.getElementById('shareUrlComplete');
+            } else {
+                urlInput = document.getElementById('shareUrlActive');
+            }
+            
+            if (!urlInput) return;
+            
             urlInput.select();
             
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(urlInput.value).then(() => {
-                    const btn = document.querySelector('.copy-btn');
-                    const originalText = btn.textContent;
-                    btn.textContent = 'COPIED!';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                    }, 2000);
+                    // Find the button that was clicked
+                    const btns = document.querySelectorAll('.copy-btn');
+                    btns.forEach(btn => {
+                        const originalText = btn.textContent;
+                        btn.textContent = 'COPIED!';
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                        }, 2000);
+                    });
                 });
             } else {
                 document.execCommand('copy');
-                const btn = document.querySelector('.copy-btn');
-                const originalText = btn.textContent;
-                btn.textContent = 'COPIED!';
-                setTimeout(() => {
+                const btns = document.querySelectorAll('.copy-btn');
+                btns.forEach(btn => {
+                    const originalText = btn.textContent;
+                    btn.textContent = 'COPIED!';
+                    setTimeout(() => {
                     btn.textContent = originalText;
                 }, 2000);
             }
