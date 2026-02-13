@@ -231,14 +231,25 @@
             </div>
 
             <div class="theme-selector" style="text-align: center; margin-bottom: 20px;">
-                <span style="color: #888; font-size: 12px;">Theme: </span>
-                <select id="themeSelect" onchange="changeTheme(this.value)" style="background: var(--terminal-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 5px 10px; font-family: inherit; font-size: 12px; cursor: pointer;">
-                    <option value="default">Classic Green</option>
-                    <option value="latte">Catppuccin Latte</option>
-                    <option value="frappe">Catppuccin Frappé</option>
-                    <option value="macchiato">Catppuccin Macchiato</option>
-                    <option value="mocha">Catppuccin Mocha</option>
-                </select>
+                <div style="margin-bottom: 10px;">
+                    <span style="color: #888; font-size: 12px;">Theme: </span>
+                    <select id="themeSelect" onchange="changeTheme(this.value)" style="background: var(--terminal-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 5px 10px; font-family: inherit; font-size: 12px; cursor: pointer;">
+                        <option value="default">Classic Green</option>
+                        <option value="latte">Catppuccin Latte</option>
+                        <option value="frappe">Catppuccin Frappé</option>
+                        <option value="macchiato">Catppuccin Macchiato</option>
+                        <option value="mocha">Catppuccin Mocha</option>
+                    </select>
+                </div>
+                <div>
+                    <span style="color: #888; font-size: 12px;">Accent: </span>
+                    <span class="color-btn" onclick="changeColor('#00ff00')" style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: #00ff00; cursor: pointer; margin: 0 3px; border: 2px solid transparent;" title="Green"></span>
+                    <span class="color-btn" onclick="changeColor('#ff5f56')" style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: #ff5f56; cursor: pointer; margin: 0 3px; border: 2px solid transparent;" title="Red"></span>
+                    <span class="color-btn" onclick="changeColor('#ffb000')" style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: #ffb000; cursor: pointer; margin: 0 3px; border: 2px solid transparent;" title="Amber"></span>
+                    <span class="color-btn" onclick="changeColor('#00aaff')" style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: #00aaff; cursor: pointer; margin: 0 3px; border: 2px solid transparent;" title="Blue"></span>
+                    <span class="color-btn" onclick="changeColor('#ff69b4')" style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: #ff69b4; cursor: pointer; margin: 0 3px; border: 2px solid transparent;" title="Pink"></span>
+                    <span class="color-btn" onclick="changeColor('#ffffff')" style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: #ffffff; cursor: pointer; margin: 0 3px; border: 2px solid transparent;" title="White"></span>
+                </div>
             </div>
 
             <div id="loginForm" class="form-container active">
@@ -248,7 +259,10 @@
                 </div>
                 <div class="input-line">
                     <label>Password:</label>
-                    <input type="password" id="loginPassword" class="terminal-input" placeholder="Enter password">
+                    <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                        <input type="password" id="loginPassword" class="terminal-input" placeholder="Enter password" style="padding-right: 40px;">
+                        <span onclick="togglePassword('loginPassword', this)" style="position: absolute; right: 10px; cursor: pointer; color: var(--text-color);">👁️</span>
+                    </div>
                 </div>
                 <div id="loginError" class="error-message"></div>
                 <button onclick="handleLogin()" class="terminal-btn-action">LOGIN</button>
@@ -264,11 +278,17 @@
                 </div>
                 <div class="input-line">
                     <label>Password:</label>
-                    <input type="password" id="regPassword" class="terminal-input" placeholder="Choose password">
+                    <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                        <input type="password" id="regPassword" class="terminal-input" placeholder="Choose password" style="padding-right: 40px;">
+                        <span onclick="togglePassword('regPassword', this)" style="position: absolute; right: 10px; cursor: pointer; color: var(--text-color);">👁️</span>
+                    </div>
                 </div>
                 <div class="input-line">
                     <label>Confirm Password:</label>
-                    <input type="password" id="regConfirmPassword" class="terminal-input" placeholder="Confirm password">
+                    <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                        <input type="password" id="regConfirmPassword" class="terminal-input" placeholder="Confirm password" style="padding-right: 40px;">
+                        <span onclick="togglePassword('regConfirmPassword', this)" style="position: absolute; right: 10px; cursor: pointer; color: var(--text-color);">👁️</span>
+                    </div>
                 </div>
                 <div id="registerError" class="error-message"></div>
                 <div id="registerSuccess" class="success-message"></div>
@@ -311,14 +331,56 @@
             localStorage.setItem('terminalTheme', theme);
         }
 
+        function changeColor(color) {
+            document.documentElement.style.setProperty('--text-color', color);
+            document.documentElement.style.setProperty('--border-color', color);
+            document.documentElement.style.setProperty('--shadow-color', color.replace(')', ', 0.3)').replace('rgb', 'rgba').replace('#', 'rgba(').replace(/([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i, (m, r, g, b) => `${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}`));
+            document.documentElement.style.setProperty('--shadow-color', color.includes('rgba') ? color.replace('0.3', '0.3') : color + '4D');
+            
+            // Save accent color
+            localStorage.setItem('accentColor', color);
+            
+            // Update color button borders
+            updateColorButtonBorders(color);
+        }
+
+        function updateColorButtonBorders(activeColor) {
+            const buttons = document.querySelectorAll('.color-btn');
+            buttons.forEach(btn => {
+                const btnColor = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                if (btnColor.toLowerCase() === activeColor.toLowerCase()) {
+                    btn.style.border = '2px solid var(--text-color)';
+                } else {
+                    btn.style.border = '2px solid transparent';
+                }
+            });
+        }
+
         function loadTheme() {
             const savedTheme = localStorage.getItem('terminalTheme') || 'default';
+            const savedColor = localStorage.getItem('accentColor') || null;
+            
             document.getElementById('themeSelect').value = savedTheme;
             changeTheme(savedTheme);
+            
+            if (savedColor) {
+                changeColor(savedColor);
+            }
         }
 
         // Load theme on startup
         loadTheme();
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
 
         function showLogin() {
             document.getElementById('loginForm').classList.add('active');

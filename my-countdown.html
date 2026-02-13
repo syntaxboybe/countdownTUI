@@ -557,6 +557,12 @@
                 <option value="macchiato">Catppuccin Macchiato</option>
                 <option value="mocha">Catppuccin Mocha</option>
             </select>
+            <span class="color-btn" onclick="changeColor('#00ff00')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #00ff00; cursor: pointer; margin-left: 8px; border: 2px solid transparent;" title="Green"></span>
+            <span class="color-btn" onclick="changeColor('#ff5f56')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ff5f56; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Red"></span>
+            <span class="color-btn" onclick="changeColor('#ffb000')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ffb000; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Amber"></span>
+            <span class="color-btn" onclick="changeColor('#00aaff')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #00aaff; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Blue"></span>
+            <span class="color-btn" onclick="changeColor('#ff69b4')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ff69b4; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="Pink"></span>
+            <span class="color-btn" onclick="changeColor('#ffffff')" style="display: inline-block; width: 18px; height: 18px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-left: 3px; border: 2px solid transparent;" title="White"></span>
         </div>
         <div class="terminal-body">
             <div id="countdownContent">
@@ -619,13 +625,37 @@
             localStorage.setItem('terminalTheme', theme);
         }
 
+        function changeColor(color) {
+            document.documentElement.style.setProperty('--text-color', color);
+            document.documentElement.style.setProperty('--border-color', color);
+            document.documentElement.style.setProperty('--shadow-color', color + '4D');
+            localStorage.setItem('accentColor', color);
+            updateColorButtonBorders(color);
+        }
+
+        function updateColorButtonBorders(activeColor) {
+            const buttons = document.querySelectorAll('.color-btn');
+            buttons.forEach(btn => {
+                const btnColor = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                if (btnColor.toLowerCase() === activeColor.toLowerCase()) {
+                    btn.style.border = '2px solid var(--text-color)';
+                } else {
+                    btn.style.border = '2px solid transparent';
+                }
+            });
+        }
+
         function loadTheme() {
             const savedTheme = localStorage.getItem('terminalTheme') || 'default';
+            const savedColor = localStorage.getItem('accentColor') || null;
             const themeSelect = document.getElementById('themeSelect');
             if (themeSelect) {
                 themeSelect.value = savedTheme;
             }
             changeTheme(savedTheme);
+            if (savedColor) {
+                changeColor(savedColor);
+            }
         }
 
         // Load theme on startup
