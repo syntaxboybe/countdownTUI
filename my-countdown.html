@@ -794,9 +794,8 @@
                 targetTime: countdownData.targetTime,
                 owner: countdownData.owner
             };
-            // Use URL-safe base64 encoding
-            let encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
-            encodedData = encodedData.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+            // Simple encoding - just encode the JSON string
+            const encodedData = encodeURIComponent(JSON.stringify(shareData));
             const url = `${window.location.origin}/shared-countdown?data=${encodedData}`;
             document.getElementById('shareUrlInput').value = url;
             document.getElementById('copiedText').classList.remove('show');

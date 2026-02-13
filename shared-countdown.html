@@ -420,24 +420,20 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const countdownId = urlParams.get('id');
-        let encodedData = urlParams.get('data');
+        const encodedData = urlParams.get('data');
 
         let countdownInterval;
         let countdownData;
 
         if (encodedData) {
-            // New format: data encoded in URL (works across devices)
+            // New format: data in URL (works across devices)
             try {
-                // Make URL-safe before decoding
-                encodedData = encodedData.replace(/-/g, '+').replace(/_/g, '/');
-                // Add padding if needed
-                while (encodedData.length % 4) {
-                    encodedData += '=';
-                }
-                countdownData = JSON.parse(decodeURIComponent(escape(atob(encodedData))));
+                // Simple decode - just reverse the encoding
+                const decodedJson = decodeURIComponent(encodedData);
+                countdownData = JSON.parse(decodedJson);
                 loadCountdownFromData();
             } catch (e) {
-                console.error('Error parsing countdown data:', e);
+                console.error('Error parsing countdown data:', e, encodedData);
                 showNotFound();
             }
         } else if (countdownId) {
@@ -562,9 +558,8 @@
                 targetTime: countdownData.targetTime,
                 owner: countdownData.owner
             };
-            // Use URL-safe base64 encoding
-            let newEncodedData = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
-            newEncodedData = newEncodedData.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+            // Simple encoding - just encode the JSON string
+            const newEncodedData = encodeURIComponent(JSON.stringify(shareData));
             const shareUrl = `${window.location.origin}/shared-countdown?data=${newEncodedData}`;
             
             // Set URL in both share inputs
